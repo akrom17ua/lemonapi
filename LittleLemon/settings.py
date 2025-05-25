@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'django_filters',
     'djoser',
+    'rest_framework_simplejwt',
 ]
 
 REST_FRAMEWORK = {
@@ -55,7 +57,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_SCHEMA_CLASS': ('drf_spectacular.openapi.AutoSchema'),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'redt_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -63,15 +67,6 @@ REST_FRAMEWORK = {
     )
     
 }
-
-
-
-
-
-
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -163,4 +158,8 @@ INTERNAL_IPS   = [
 DJOSER = {
     "USER_ID_FIELD": "username",
     #"LOGIN_FIELD": "email"
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes = 5),
 }

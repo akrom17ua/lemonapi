@@ -3,11 +3,14 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import MenuItem, Category
+from .models import MenuItem, Category, Rating
 from .serializers import MenuItemSerializer, CategorySerializer
 from django.core.paginator import Paginator, EmptyPage
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .serializers import RatingSerializer
 
 
 
@@ -59,3 +62,16 @@ def manager_view(request):
         return Response({"message": "Only manager should see this"})
     else:
         return Response({"message": "You are not authorized"}, 403)
+    
+    
+    
+class RatingsView(generics.ListCreateAPIView):
+    queryset = Rating.objects.all()
+    serializer_class = RatingSerializer
+    
+    def get_permissions(self):
+        if(self.request.method == 'GET'):
+            return []
+        return [IsAuthenticated]
+        
+    
